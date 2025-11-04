@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emotion Check-in | Create Account</title>
+
+  <!-- ถ้าไฟล์ style.css อยู่คนละโฟลเดอร์ ให้เปลี่ยนเป็น ../css/style.css -->
+  <link rel="stylesheet" href="../css/createaccount.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="auth-container">
+    <!-- LEFT SECTION -->
+    <div class="left-box">
+      <div class="logo">😊</div>
+      <h2>Emotion Check-in<br><span>for Employee</span></h2>
+      <img src="../images/รูปภาพหน้า login.png" alt="illustration" class="illustration" />
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-box">
+      <h3>Create Account</h3>
+
+      <form class="create-form">
+        <!-- ชื่อ -->
+        <div class="row two-cols">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" placeholder="First Name" required />
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" placeholder="Last Name" required />
+          </div>
+        </div>
+
+        <!-- อีเมล -->
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" placeholder="Enter your email" required />
+        </div>
+
+        <!-- รหัสผ่าน -->
+        <div class="field">
+          <label>Password</label>
+          <input type="password" placeholder="Create a password" required />
+        </div>
+
+        <!-- ปุ่ม -->
+        <button type="submit" class="primary-btn">Create Account</button>
+
+        <!-- PDPA -->
+        <label class="pdpa-row">
+          <input type="checkbox" required />
+          <span>I have read and agree to the Personal Data Protection Policy (PDPA)</span>
+        </label>
+
+        <!-- Already have account -->
+        <p class="have-account">
+          Already have an account? <a href="login.html">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

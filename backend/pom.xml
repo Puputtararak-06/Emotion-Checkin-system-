@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <!--  ยึดเวอร์ชัน "ใหม่" (3.3.2) เพราะโค้ดเราใช้ "jakarta" -->
+        <version>3.3.2</version> 
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!-- 🔑 (ของอาจารย์) ยึด GroupId และ ArtifactId ตาม Template -->
+    <groupId>th.mfu</groupId>
+    <artifactId>emotion-checkin-system</artifactId> 
+    <version>0.0.1-SNAPSHOT</version>
+    <name>EmotionCheckinSystem</name>
+    <description>Emotion Check-in System for Employees</description>
+
+    <properties>
+        <!-- (ของเรา) ยึด Java 21 (เพราะเราแก้ Environment มาทางนี้แล้ว) -->
+        <java.version>21</java.version>
+    </properties>
+
+    <!-- 🔑 (ของอาจารย์) "เพิ่ม" ส่วนนี้เข้ามา เพื่อ "Google AI" -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>spring-cloud-gcp-dependencies</artifactId>
+                <!-- 
+                    (หมายเหตุ: เวอร์ชัน 4.1.4 (ที่อาจารย์ให้) มันเก่าไป... 
+                    กูอัปเดตเป็น 5.4.1 ให้... มันถึงจะ "เข้ากันได้" (Compatible) กับ Boot 3.3.2 ของเรา) 
+                -->
+                <version>5.4.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- (นี่คือ Dependencies "ของเรา" ทั้งหมด... ซึ่งมัน "ถูกต้อง" อยู่แล้ว) -->
+
+        <!-- ✅ Spring Boot JPA (เชื่อม Entity ↔ Database) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- ✅ Spring Boot Web (ใช้สร้าง REST API / Controller) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ✅ MySQL Driver (เชื่อม Docker หรือ Local Database) -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ✅ H2 Database (สำหรับรัน Test โดยไม่ต้องต่อ MySQL) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <!-- 🔑 (ของเรา) ยึด "scope: test" (ดีกว่า "scope: runtime" ของอาจารย์) -->
+            <scope>test</scope> 
+        </dependency>
+        
+        <!-- ✅ Lombok (ลดโค้ด getter/setter/constructor) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ✅ Spring Security Crypto (ใช้เข้ารหัส password) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+        <!-- ✅ Validation (ใช้ตรวจ input เช่น @NotNull, @Email) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- ✅ DevTools (reload project อัตโนมัติ) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ✅ Unit Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- ✅ JUnit 5 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ✅ Mockito for Testing -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- ✅ Google Cloud Spring Boot Starter for Language API -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            
+            <!-- (นี่คือ Plugin "ของเรา"... ซึ่งมัน "ดีกว่า" ของอาจารย์) -->
+            <!-- 🔑 บังคับให้ Maven Compiler ใช้ Java 21 และ "รู้จัก" Lombok -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version> 
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <!-- 🔑 (FIXED) ลบบรรทัด <version>${lombok.version}</version> ที่พัง ทิ้งไปแล้ว -->
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- ✅ Spring Boot Run Config -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
+
