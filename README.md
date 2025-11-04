@@ -7,7 +7,7 @@ Please use this template for your project.
 List your group's member's below with ID and name.
 # Member ID
 - 6731503115 Pupattararak Masomjit
-- 67yyyyyyy firstname lastname
+- 6731503008 Yanon Laiphukum
   ...
 =======
 # Emotion-Checkin-system-
