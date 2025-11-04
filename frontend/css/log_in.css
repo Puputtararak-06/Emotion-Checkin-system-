@@ -13,6 +13,7 @@ body {
   justify-content: center;
 }
 
+/* กล่องรวมซ้าย+ขวา */
 .login-container {
   display: flex;
   width: 1100px;
@@ -40,6 +41,11 @@ body {
 .left-box h2 span {
   font-weight: 300;
   opacity: 0.9;
+}
+
+.logo {
+  font-size: 22px;
+  margin-bottom: 20px;
 }
 
 .illustration {
@@ -115,6 +121,7 @@ body {
   font-weight: 500;
 }
 
+/* เส้นคั่น OR */
 .divider {
   display: flex;
   align-items: center;
@@ -135,6 +142,7 @@ body {
   margin: 0 10px;
 }
 
+/* ปุ่ม social */
 .social-login {
   display: flex;
   gap: 15px;
@@ -167,17 +175,22 @@ body {
   border-color: #4064ac;
 }
 
+/* responsive */
 @media (max-width: 900px) {
   .login-container {
     flex-direction: column;
     width: 90%;
     height: auto;
   }
-  .left-box, .right-box {
+
+  .left-box,
+  .right-box {
     width: 100%;
     position: relative;
   }
+
   .illustration {
     position: static;
+    margin-top: 20px;
   }
 }
