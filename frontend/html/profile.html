@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile / Attendance</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/employee.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-center">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="checkin.html" class="nav-link">Check-in</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+  </div>
+</header>
+
+<main style="padding:36px;">
+  <div style="display:flex;gap:28px;align-items:flex-start;">
+    <section class="dashboard-card" style="flex:1;min-width:480px;">
+      <h3 style="margin:0 0 14px 0">Attendance</h3>
+      <canvas id="profileChart" style="height:220px"></canvas>
+    </section>
+
+    <section class="dashboard-card" style="flex:1;min-width:480px;">
+      <h3 style="margin:0 0 14px 0">Monthly Calendar</h3>
+      <div id="profileCalendar" class="calendar-box"></div>
+    </section>
+  </div>
+
+  <div style="margin-top:22px">
+    <section class="dashboard-card">
+      <h3 style="margin:0 0 12px 0">Attendance Overview</h3>
+      <div id="profileAttendanceTable"></div>
+    </section>
+  </div>
+</main>
+
+<script src="../js/dashboard.js" defer></script>
+</body>
+</html>
