@@ -9,6 +9,7 @@ List your group's member's below with ID and name.
 - 6731503115 Pupattararak Masomjit
 - 6731503008 Yanon Laiphukum
 - 6731503126 Setthawut Sikhiao
+- 6731503007 Chaiyan Yodchana
   ...
 =======
 # Emotion-Checkin-system-
