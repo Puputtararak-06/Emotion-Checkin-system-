@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Check-in Success</title>
+  <link rel="stylesheet" href="../css/employee.css">
+</head>
+<body>
+
+<header class="navbar">
+  <div class="nav-center">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="checkin.html" class="nav-link active">Check-in</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+  </div>
+</header>
+
+<div class="checkin-wrapper" style="text-align:center;">
+  <div class="checkin-card">
+
+    <div style="font-size:46px; margin-bottom:10px;">✅</div>
+    <h3>Check-in Successful</h3>
+
+    <div id="result" style="margin-top:14px; font-size:18px;"></div>
+
+    <a href="dashboard.html" class="btn primary" style="margin-top:24px; display:inline-block;">Go to Dashboard</a>
+
+  </div>
+</div>
+
+<script>
+  const today = new Date().toISOString().split("T")[0];
+  const data = JSON.parse(localStorage.getItem("checkin-"+today));
+  document.getElementById("result").innerHTML = `${data.emoji} ${data.mood}<br><br>${data.note || ""}`;
+</script>
+
+</body>
+</html>

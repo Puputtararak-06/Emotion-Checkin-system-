@@ -1,3 +1,4 @@
+
 package come.emotion_checkin_syetem.controller;
 
 import come.emotion_checkin_syetem.entity.User;
@@ -51,4 +52,4 @@ public class AuthController {
             public final Object userInfo = user;
         };
     }
-}
+
