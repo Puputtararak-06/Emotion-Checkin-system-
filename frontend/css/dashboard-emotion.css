@@ -1,0 +1,287 @@
+/* GLOBAL NAVBAR STYLE MATCH HOME */
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 18px 0;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px);
+}
+
+.nav-center {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 8px 22px;
+  border-radius: 25px;
+  transition: 0.25s;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.nav-link.active {
+  background: white;
+  color: #6b4bff;
+  font-weight: 700;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: linear-gradient(145deg, #2b3fdd, #6072f5, #a3b0ff);
+  background-size: 180% 180%;
+  animation: bgmove 12s ease infinite;
+  color: white;
+}
+
+@keyframes bgmove {
+  0% { background-position: 0% 30%; }
+  50% { background-position: 100% 70%; }
+  100% { background-position: 0% 30%; }
+}
+
+
+
+/* NAVBAR */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  position: relative;
+}
+
+/* โลโก้ซ้าย + ไอคอนขวา อยู่ลอยเท่า Navbar */
+.nav-left, .nav-right {
+  position: absolute;
+  top: 40px;
+}
+
+.nav-left { left: 40px; }
+.nav-right { right: 40px; display: flex; gap: 16px; font-size: 22px; }
+
+/* ปุ่ม Capsule กลาง */
+.capsule-nav {
+  display: flex;
+  gap: 30px;
+  padding: 12px 40px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.30);
+  transition: 0.3s;
+}
+
+/* ปุ่มใน Navbar */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  transition: 0.25s;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.32);
+}
+
+.nav-link.active {
+  background: white;
+  color: #5B49FF;
+  font-weight: 600;
+}
+
+
+/* MAIN LAYOUT */
+.main-layout {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* CHARTS */
+.charts-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+.chart-box {
+  width: 260px;
+  height: 170px;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+canvas {
+  width: 230px !important;
+  height: 120px !important;
+}
+
+/* TABLE */
+.table-box {
+  background: white;
+  padding: 26px;
+  border-radius: 20px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  font-weight: 600;
+}
+td, th {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+/* NAVBAR GLOBAL */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* LOGO LEFT */
+.logo-icon {
+  font-size: 26px;
+  display: block;
+}
+
+/* CAPSULE NAV CENTER */
+.capsule-nav {
+  display: flex;
+  gap: 28px;
+  padding: 8px 30px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+}
+
+/* LINKS */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  transition: 0.25s;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.nav-link.active {
+  background: white;
+  color: #6b4bff;
+  font-weight: 600;
+}
+
+/* RIGHT ICONS */
+.nav-right {
+  display: flex;
+  gap: 18px;
+  font-size: 20px;
+}
+
+.nav-icon {
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.nav-icon:hover {
+  opacity: 0.65;
+}
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 35px;
+  position: relative;
+  z-index: 20;
+}
+
+/* โลโก้ & ไอคอนขวา */
+.nav-left, .nav-right {
+  position: absolute;
+  top: 35px;
+}
+.nav-left { left: 40px; }
+.nav-right { right: 40px; display: flex; gap: 18px; font-size: 20px; }
+
+/* กลุ่มปุ่ม */
+.capsule-nav {
+  display: flex;
+  gap: 28px;
+  padding: 10px 40px;
+  border-radius: 40px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+}
+
+/* ปุ่ม */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 8px 18px;
+  border-radius: 22px;
+  transition: 0.25s;
+}
+.nav-link:hover { background: rgba(255,255,255,0.25); }
+.nav-link.active {
+  background: white;
+  color: #5A4BFF;
+  font-weight: 600;
+}
+/* ทำให้ตัวหนังสือในกล่อง หรือพื้นที่พื้นหลังขาว กลับเป็นสีเข้มอ่านง่าย */
+.section-box,
+.chart-box,
+.info-box,
+.table-box,
+.content-right,
+.chart-side,
+.calendar-side {
+  color: #333 !important;
+}
+
+/* ข้อความหัวข้อกราฟ */
+.chart-side h3,
+.section-box h3 {
+  color: #222 !important;
+  font-weight: 600;
+}
+
+/* ตัวเลขด้านซ้าย */
+.info-box .info-value {
+  color: #3cd35e !important; /* ตัวเลข 450 */
+}
+
+/* ป้ายตัวเลขบนสุด เช่น 500 */
+.info-box strong,
+.info-box b {
+  color: #333 !important;
+}
+
+/* ตารางและปฏิทินให้ตัวอักษรเข้ม */
+.calendar-table td,
+.calendar-table th {
+  color: #444 !important;
+}
