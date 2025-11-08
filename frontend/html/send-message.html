@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Send Message</title>
+<link rel="stylesheet" href="../css/home-hr.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="nav-left"><span class="logo-icon">😊</span></div>
+
+  <div class="capsule-nav">
+    <a href="home-hr.html" class="nav-link">Home</a>
+    <a href="hr-dashboard.html" class="nav-link">Dash Board</a>
+    <a href="hr-dashboard-emotion.html" class="nav-link active">Dash Board emotion</a>
+  </div>
+
+  <div class="nav-right">
+    <a href="notification.html" class="nav-icon">🔔</a>
+    <a href="#" class="nav-icon">👤</a>
+  </div>
+</header>
+
+
+<!-- PAGE CONTENT -->
+<div class="message-layout">
+
+  <!-- LEFT EMPLOYEE INFO -->
+  <div class="msg-left">
+    <h2>Emotion Check-in<br>for Employee</h2>
+    <img src="../img/user1.png" class="msg-profile-pic">
+  </div>
+
+  <!-- RIGHT MESSAGE PANEL -->
+  <div class="msg-right">
+
+    <div class="msg-info-box">
+      <h3>Sarah Kim <span class="score">check-in 8.20</span></h3>
+      <p class="small">Position: UX Designer - Department: Product Design</p>
+      <p class="small">Employee ID: 10234 - Tenure: 1.5 years</p>
+    </div>
+
+    <textarea class="msg-textarea" placeholder="Write your message to employee..."></textarea>
+
+    <button id="sendBtn" onclick="sendMessage()">Send Employee 💙</button>
+<span id="sentMsg" style="margin-left: 12px; color: #b6ffb2; font-weight:600; display:none;">Message Sent ✅</span>
+
+
+  </div>
+<script>
+function sendMessage() {
+  let textarea = document.querySelector("textarea");
+  let sentMsg = document.getElementById("sentMsg");
+
+  if (textarea.value.trim() === "") {
+    alert("⚠️ กรุณากรอกข้อความก่อนส่ง");
+    return;
+  }
+
+  // แสดงข้อความ "ส่งแล้ว"
+  sentMsg.style.display = "inline";
+
+  // ล้างช่องข้อความ
+  textarea.value = "";
+
+  // ซ่อนข้อความหลัง 3 วินาที (ถ้าอยากให้ค้างไว้ลบส่วนนี้ได้)
+  setTimeout(() => {
+    sentMsg.style.display = "none";
+  }, 3000);
+}
+</script>
+
+</div>
+
+
+</body>
+</html>

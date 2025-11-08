@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dash Board Emotion</title>
+  <link rel="stylesheet" href="../css/dashboard-emotion.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+  <div class="nav-left">
+    <span class="logo-icon">😊</span>
+  </div>
+
+  <div class="nav-center capsule-nav">
+    <a href="home-hr.html" class="nav-link">Home</a>
+    <a href="hr-dashboard.html" class="nav-link">Dash Board</a>
+    <a href="hr-dashboard-emotion.html" class="nav-link active">Dash Board Emotion</a>
+  </div>
+
+  <div class="nav-right">
+  <a href="notification.html" class="nav-icon">🔔</a>
+  <a href="employee-profile.html" class="nav-icon">👤</a>
+</div>
+
+</header>
+
+    <!-- กราฟ 3 ช่อง -->
+    <div class="charts-row">
+      <div class="chart-box"><canvas id="chart1"></canvas></div>
+      <div class="chart-box"><canvas id="chart2"></canvas></div>
+      <div class="chart-box"><canvas id="chart3"></canvas></div>
+    </div>
+
+    <!-- Attendance Table -->
+    <div class="table-box">
+      <h3>Attendance Overview</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Role</th><th>Department</th><th>Date</th><th>Check-in</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>01</td><td>Sarah</td><td>Staff</td><td>HR</td><td>2025-01-02</td><td>09:10</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+<script src="../js/hr-dashboard-emotion.js"></script>
+
+</body>
+</html>
