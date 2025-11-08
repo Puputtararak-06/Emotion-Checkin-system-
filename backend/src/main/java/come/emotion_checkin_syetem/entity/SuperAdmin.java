@@ -1,4 +1,4 @@
-package com.emotion_checkin_sytem.entity;
+package come.emotion_checkin_syetem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

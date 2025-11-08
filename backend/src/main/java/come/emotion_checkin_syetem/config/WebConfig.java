@@ -1,4 +1,4 @@
-package th.mfu.config;
+package come.emotion_checkin_syetem.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
