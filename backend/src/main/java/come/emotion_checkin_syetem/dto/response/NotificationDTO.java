@@ -38,7 +38,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Notification {
+public class NotificationDTO {
     
     private Long id;
     private String message;
