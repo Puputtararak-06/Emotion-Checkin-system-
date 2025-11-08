@@ -31,7 +31,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmotionAIResult {
+
+public class EmotionAiResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
