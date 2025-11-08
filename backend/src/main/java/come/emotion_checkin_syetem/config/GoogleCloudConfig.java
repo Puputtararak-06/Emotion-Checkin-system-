@@ -1,3 +1,4 @@
+
 package come.emotion_checkin_syetem.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
@@ -80,7 +81,7 @@ public class GoogleCloudConfig {
         // Create and return LanguageServiceClient
         return LanguageServiceClient.create(settings);
     }
-
+}
     /**
      * ⚠️ ALTERNATIVE: Use default credentials
      * 
