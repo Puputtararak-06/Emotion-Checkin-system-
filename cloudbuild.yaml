@@ -1,0 +1,176 @@
+# ===================================
+# GOOGLE CLOUD BUILD CONFIGURATION
+# Automated CI/CD pipeline
+# ===================================
+
+# Build steps
+steps:
+  # ===================================
+  # STEP 1: Build with Maven
+  # ===================================
+  - name: 'maven:3.9-openjdk-21-slim'
+    entrypoint: mvn
+    args:
+      - 'clean'
+      - 'package'
+      - '-DskipTests'  # Skip tests for faster build (optional)
+    id: 'maven-build'
+    
+  # ===================================
+  # STEP 2: Build Docker image
+  # ===================================
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/emotion-checkin:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/emotion-checkin:latest'
+      - '.'
+    id: 'docker-build'
+    waitFor: ['maven-build']
+    
+  # ===================================
+  # STEP 3: Push Docker image to GCR
+  # ===================================
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/emotion-checkin:$COMMIT_SHA'
+    id: 'docker-push-sha'
+    waitFor: ['docker-build']
+    
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/emotion-checkin:latest'
+    id: 'docker-push-latest'
+    waitFor: ['docker-build']
+    
+  # ===================================
+  # STEP 4: Deploy to Cloud Run
+  # ===================================
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'emotion-checkin'
+      - '--image=gcr.io/$PROJECT_ID/emotion-checkin:$COMMIT_SHA'
+      - '--platform=managed'
+      - '--region=asia-southeast1'  # Bangkok region
+      - '--allow-unauthenticated'   # Public access
+      - '--memory=1Gi'               # 1GB memory
+      - '--cpu=1'                    # 1 CPU
+      - '--max-instances=10'         # Max 10 instances
+      - '--min-instances=0'          # Scale to zero
+      - '--port=8080'
+      - '--set-env-vars=SPRING_PROFILES_ACTIVE=prod,TZ=Asia/Bangkok'
+      # Database connection (use Secret Manager in production!)
+      - '--set-env-vars=SPRING_DATASOURCE_URL=jdbc:mysql://CLOUD_SQL_CONNECTION_NAME/emotion_checkin_db'
+      - '--set-env-vars=SPRING_DATASOURCE_USERNAME=root'
+      # ⚠️ Use Secret Manager for password!
+      # - '--set-secrets=SPRING_DATASOURCE_PASSWORD=db-password:latest'
+    id: 'deploy-cloud-run'
+    waitFor: ['docker-push-sha']
+
+# ===================================
+# Build configuration
+# ===================================
+options:
+  # Machine type (n1-standard-1 = 1 vCPU, 3.75GB RAM)
+  machineType: 'N1_HIGHCPU_8'
+  
+  # Timeout (max 2 hours, but 20 min should be enough)
+  timeout: '1200s'
+  
+  # Logging
+  logging: CLOUD_LOGGING_ONLY
+  
+  # Substitution option
+  substitution_option: 'ALLOW_LOOSE'
+
+# ===================================
+# Images to store in Container Registry
+# ===================================
+images:
+  - 'gcr.io/$PROJECT_ID/emotion-checkin:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/emotion-checkin:latest'
+
+# ===================================
+# Timeout
+# ===================================
+timeout: '1200s'  # 20 minutes
+
+# ===================================
+# SETUP INSTRUCTIONS
+# ===================================
+
+# 1. Enable required APIs:
+#    gcloud services enable cloudbuild.googleapis.com
+#    gcloud services enable run.googleapis.com
+#    gcloud services enable containerregistry.googleapis.com
+
+# 2. Create Cloud Build trigger:
+#    gcloud builds triggers create github \
+#      --repo-name=emotion-checkin-system \
+#      --repo-owner=YOUR_GITHUB_USERNAME \
+#      --branch-pattern="^main$" \
+#      --build-config=cloudbuild.yaml
+
+# 3. Manual build:
+#    gcloud builds submit --config=cloudbuild.yaml
+
+# 4. View build logs:
+#    gcloud builds list
+#    gcloud builds log BUILD_ID
+
+# 5. Get Cloud Run URL:
+#    gcloud run services describe emotion-checkin \
+#      --region=asia-southeast1 --format='value(status.url)'
+
+# ===================================
+# ENVIRONMENT VARIABLES (Cloud Run)
+# ===================================
+
+# Set via Cloud Run console or gcloud:
+# 
+# Database (Cloud SQL):
+# - SPRING_DATASOURCE_URL=jdbc:mysql:///emotion_checkin_db?cloudSqlInstance=PROJECT:REGION:INSTANCE&socketFactory=com.google.cloud.sql.mysql.SocketFactory
+# - SPRING_DATASOURCE_USERNAME=root
+# - SPRING_DATASOURCE_PASSWORD=<from Secret Manager>
+# 
+# Google Cloud:
+# - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
+# - GOOGLE_CLOUD_PROJECT_ID=your-project-id
+# 
+# Other:
+# - SPRING_PROFILES_ACTIVE=prod
+# - TZ=Asia/Bangkok
+
+# ===================================
+# NOTES
+# ===================================
+
+# 📦 Build time: ~5-10 minutes
+# 💰 Cost: ~$0.10 per build (Free tier: 120 builds/day)
+# 🚀 Deploy time: ~2-3 minutes
+# 🌍 Region: asia-southeast1 (Bangkok)
+# 💾 Memory: 1GB (adjustable)
+# 🔒 Security: Use Secret Manager for passwords!
+
+# ===================================
+# COST OPTIMIZATION
+# ===================================
+
+# Cloud Run pricing:
+# - $0.00002400 per vCPU-second
+# - $0.00000250 per GiB-second
+# - $0.40 per million requests
+# - FREE TIER: 2 million requests/month!
+
+# Tips:
+# 1. Scale to zero (--min-instances=0)
+# 2. Use smaller memory (512Mi if possible)
+# 3. Set max instances limit
+# 4. Use asia-southeast1 (cheaper than us/eu)
