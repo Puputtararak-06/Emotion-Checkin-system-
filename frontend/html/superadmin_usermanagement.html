@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Management - Super Admin</title>
+  <link rel="stylesheet" href="../css/superadmin.css" />
+</head>
+
+<body>
+
+<div class="top-nav">
+  <div class="logo">😊</div>
+  <div class="menu">
+    <a href="superadmin_home.html">Home</a>
+    <a href="superadmin_dashboard.html">Dash Board</a>
+    <a class="active" href="superadmin_usermanagement.html">User Management</a>
+  </div>
+  <div class="icons">
+    <img src="../images/bell.png" />
+    <img src="../images/profile.png" />
+  </div>
+</div>
+
+<div class="content-container">
+
+  <div class="table-header">
+    <input type="text" placeholder="Search" class="input" />
+    <select class="input"><option>Role</option></select>
+    <select class="input"><option>Department</option></select>
+    <button id="btnAddUser" class="primary-btn">+ Add User</button>
+  </div>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th></th><th>Name</th><th>Username</th><th>Role</th><th>Department</th><th>Timestamp</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="userList">
+      <!-- โหลดผ่าน JS -->
+    </tbody>
+  </table>
+
+</div>
+
+<!-- Popup: Add/Edit User -->
+<div id="userPopup" class="popup hidden">
+  <div class="popup-box">
+    <div class="avatar"></div>
+    <h3 id="popupTitle">Add User</h3>
+    <input id="fullName" class="popup-input" placeholder="Full Name"/>
+    <input id="username" class="popup-input" placeholder="Username"/>
+    <select id="role" class="popup-input">
+      <option>User</option><option>HR</option><option>Admin</option>
+    </select>
+    <select id="department" class="popup-input">
+      <option>IT</option><option>Business</option><option>HR</option>
+    </select>
+    <button id="saveUserBtn" class="primary-btn">Save User</button>
+    <button onclick="closePopup()" class="cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<!-- Popup: Confirm -->
+<div id="confirmPopup" class="popup hidden">
+  <div class="confirm-box">
+    <p>Do you want to deactivate this user?</p>
+    <div class="confirm-actions">
+      <button id="btnYes" class="yes">YES</button>
+      <button id="btnNo" class="no" onclick="closeConfirm()">NO</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/superadmin-user.js"></script>
+</body>
+</html>
