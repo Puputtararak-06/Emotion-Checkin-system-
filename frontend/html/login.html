@@ -12,6 +12,7 @@
 </head>
 <body>
   <div class="login-container">
+
     <!-- LEFT -->
     <div class="left-box">
       <div class="logo">😊</div>
@@ -23,7 +24,7 @@
     <div class="right-box">
       <h3>Log-in</h3>
 
-      <form class="login-form">
+      <form class="login-form" id="loginForm">
         <label>E-mail</label>
         <input type="email" placeholder="Enter your email" required />
 
@@ -33,9 +34,18 @@
         <button type="submit" class="login-btn">Login</button>
 
         <p class="reset">Don’t have an account? <a href="createaccount.html">Create Account</a></p>
-        </p>
       </form>
     </div>
+
   </div>
+
+  <!-- ✅ Script กด Login แล้วไปหน้า Home -->
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault(); // ป้องกันการรีเฟรชหน้า
+      window.location.href = "index.html"; // ✅ เปลี่ยนลิงก์ตามไฟล์จริงของคุณ
+    });
+  </script>
+
 </body>
 </html>

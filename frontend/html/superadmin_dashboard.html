@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Super Admin | Dashboard</title>
+<link rel="stylesheet" href="../css/superadmin_dashboard.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+
+<!-- NAVBAR -->
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="emoji">😊</div>
+
+  <div class="menu">
+    <a href="superadmin_home.html">Home</a>
+    <a href="superadmin_dashboard.html" class="active">Dash Board</a>
+    <a href="superadmin_usermanagement.html">User Management</a>
+  </div>
+
+  <div class="icons">
+    <img src="../img/bell.png" class="icon">
+    <img src="../img/user.png" class="icon">
+  </div>
+</div>
+
+
+<div class="container">
+
+  <!-- FLEX LAYOUT -->
+  <div class="dashboard-flex">
+
+    <!-- SUMMARY COLUMN -->
+    <div class="summary-column">
+      <div class="summary-box">500 <span>Total Employee</span></div>
+      <div class="summary-box">450 <span>Present</span></div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-box">
+      <h3>Mood</h3>
+      <canvas id="moodChart"></canvas>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="calendar-box">
+      <div class="calendar-header">
+        <button id="prevMonth">&lt;</button>
+        <div id="monthLabel"></div>
+        <button id="nextMonth">&gt;</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+  </div>
+
+  <!-- ATTENDANCE TABLE -->
+  <div class="table-box">
+    <h3>Attendance Overview</h3>
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th><th>Date</th><th>Check-in</th></tr>
+      <tr><td>01</td><td>Sarah Kim</td><td>HR</td><td>HR</td><td>2025-01-02</td><td>09:10</td></tr>
+      <tr><td>02</td><td>Jason Wong</td><td>Staff</td><td>IT</td><td>2025-01-02</td><td>09:05</td></tr>
+      <tr><td>03</td><td>Emma Lee</td><td>Staff</td><td>Business</td><td>2025-01-02</td><td>09:12</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// CHART
+new Chart(document.getElementById("moodChart"), {
+  type: "bar",
+  data: {
+    labels: ["Happy", "Neutral", "Unhappy"],
+    datasets: [{
+      data: [50, 28, 18],
+      backgroundColor: ["#FFE680", "#B4B3FF", "#97F5D8"]
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+
+// CALENDAR
+const monthLabel = document.getElementById("monthLabel");
+const calendarGrid = document.getElementById("calendarGrid");
+let date = new Date();
+
+function loadCalendar(){
+  calendarGrid.innerHTML = "";
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  monthLabel.textContent = date.toLocaleDateString("en-US",{month:"long", year:"numeric"});
+  const days = new Date(year, month+1, 0).getDate();
+  for(let i=1;i<=days;i++){
+    const d = document.createElement("div");
+    d.textContent = i;
+    calendarGrid.appendChild(d);
+  }
+}
+document.getElementById("prevMonth").onclick = ()=>{ date.setMonth(date.getMonth()-1); loadCalendar(); }
+document.getElementById("nextMonth").onclick = ()=>{ date.setMonth(date.getMonth()+1); loadCalendar(); }
+loadCalendar();
+</script>
+
+</body>
+</html>
