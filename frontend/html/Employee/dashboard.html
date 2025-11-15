@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard</title>
+  <title>Employee Dashboard - Emotion Check-in</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/employee.css">
 
-  <!-- Chart.js -->
+  <!-- Chart.js สำหรับกราฟเส้น -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -24,38 +24,27 @@
 <main style="padding:36px;">
   <div class="dashboard-grid">
 
-    <!-- ✅ กราฟ + ปฏิทิน -->
+    <!-- 🟦 การ์ดแสดง Line Chart: Personal Emotional Trend -->
     <section class="dashboard-card">
-
-      <!-- ✅ ใส่ wrapper เพื่อควบคุมความสูง -->
+      <h3>Your Emotional Trend</h3>
+      <p style="font-size:13px;opacity:.8;margin-top:4px;">
+        Each point represents a check-in. Higher values mean more positive emotions.
+      </p>
       <div class="chart-wrapper">
-        <canvas id="moodChart"></canvas>
+        <canvas id="moodTrendChart"></canvas>
       </div>
-
-      <div style="display:flex;justify-content:flex-end;margin:10px 0;">
-        <button id="calPrev" class="small-btn">‹</button>
-        <button id="calNext" class="small-btn">›</button>
-      </div>
-
-      <div id="calendarContainer" class="calendar-box"></div>
     </section>
 
-    <!-- ✅ ตารางรวม -->
+    <!-- 🟦 การ์ดแสดงประวัติ Check-in ของพนักงาน -->
     <section class="dashboard-card">
-      <h3>Attendance Overview</h3>
-      <div id="attendanceTableWrapper"></div>
+      <h3>Your Check-in History</h3>
+      <div id="historyTableWrapper" style="margin-top:10px;"></div>
     </section>
 
   </div>
-
-  <!-- ✅ ตารางแสดงรายละเอียด -->
-  <section class="dashboard-card" style="margin-top:26px;">
-    <h3>Attendance Detail</h3>
-    <div id="attendanceDetail"></div>
-  </section>
 </main>
 
-
+<!-- JS ของ Dashboard (เวอร์ชันใหม่) -->
 <script src="../../js/dashboard.js" defer></script>
 </body>
 </html>

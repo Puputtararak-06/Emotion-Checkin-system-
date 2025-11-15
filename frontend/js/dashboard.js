@@ -1,170 +1,203 @@
-// dashboard.js
-// - builds bar chart (Chart.js)
-// - builds sliding calendar
-// - builds attendance tables
-// - all sizing fixed so chart does NOT stretch vertically
+// js/dashboard.js  (Employee Dashboard Only)
 
-/* ---------------------- Mock Data Loader ---------------------- */
-function loadMockData() {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
+document.addEventListener('DOMContentLoaded', () => {
+  const chartCanvas = document.getElementById('moodTrendChart');
+  const historyWrapper = document.getElementById('historyTableWrapper');
 
-  return [
-    { date: `${yyyy}-${mm}-02`, mood: 'positive', emoji: '😀', name:'Alice', role:'Staff' },
-    { date: `${yyyy}-${mm}-04`, mood: 'neutral',  emoji: '😐', name:'Bob', role:'Dev' },
-    { date: `${yyyy}-${mm}-08`, mood: 'negative', emoji: '😢', name:'Charlie', role:'HR' },
-    { date: `${yyyy}-${mm}-11`, mood: 'positive', emoji: '🤩', name:'Dana', role:'PM' },
-    { date: `${yyyy}-${mm}-15`, mood: 'positive', emoji: '😀', name:'Eve', role:'Staff' },
-  ];
+  // 1) ดึงข้อมูล check-in ทั้งหมดจาก localStorage
+  const checkins = loadCheckinsFromLocalStorage();
+
+  // 2) ถ้าไม่มีข้อมูลเลย ให้แสดงข้อความ แล้วไม่ต้อง render chart
+  if (!checkins.length) {
+    if (historyWrapper) {
+      historyWrapper.innerHTML = `
+        <p style="font-size:14px; opacity:.8;">
+          You haven't submitted any check-ins yet. Try checking in on the <a href="checkin.html">Check-in</a> page.
+        </p>
+      `;
+    }
+    if (chartCanvas) {
+      chartCanvas.parentElement.innerHTML = `
+        <p style="font-size:14px; opacity:.8;">
+          No check-in data available to display the trend yet.
+        </p>
+      `;
+    }
+    return;
+  }
+
+  // 3) สร้าง line chart จากข้อมูล
+  if (chartCanvas) {
+    renderMoodTrendChart(chartCanvas, checkins);
+  }
+
+  // 4) สร้างตาราง history
+  if (historyWrapper) {
+    renderHistoryTable(historyWrapper, checkins);
+  }
+});
+
+/**
+ * ดึงข้อมูล check-in ทั้งหมดจาก localStorage
+ * ฟอร์แมตที่หน้า checkin.js เซฟ:
+ *   key: "checkin-YYYY-MM-DD"
+ *   value: { date, mood, emoji, note }
+ */
+function loadCheckinsFromLocalStorage() {
+  const items = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('checkin-')) continue;
+
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+
+      const data = JSON.parse(raw);
+
+      // กัน null / undefined
+      if (!data.date || !data.mood) continue;
+
+      items.push({
+        date: data.date,
+        mood: data.mood,
+        emoji: data.emoji || '',
+        note: data.note || ''
+      });
+    } catch (err) {
+      console.warn('Cannot parse checkin data for key', key, err);
+    }
+  }
+
+  // sort ตามวันที่น้อยไปมาก สำหรับกราฟ
+  items.sort((a, b) => a.date.localeCompare(b.date));
+  return items;
 }
 
-/* ---------------------- Chart ---------------------- */
-function renderBarChart(canvasEl, history) {
-  const counts = { positive: 0, neutral: 0, negative: 0 };
-  history.forEach(h => counts[h.mood]++);
+/**
+ * Map emotion label -> numeric score (ใช้ทำกราฟ)
+ * Negative = 1, Neutral = 2, Positive = 3
+ */
+function mapMoodToScore(label) {
+  const negative = ['Sad', 'Angry', 'Disappointed', 'Stressed', 'Exhausted'];
+  const neutral  = ['Neutral', 'Blank', 'Tired', 'Low Energy', 'Unsure'];
+  const positive = ['Content', 'Happy', 'Excited', 'Inspired', 'Loved'];
 
-  const data = {
-    labels: ['Negative', 'Neutral', 'Positive'],
-    datasets: [{
-      label: 'Mood Count',
-      data: [counts.negative, counts.neutral, counts.positive],
-      backgroundColor: ['#FF6B6B', '#9AA0B3', '#5CC96B'],
-      borderRadius: 10
-    }]
-  };
+  if (negative.includes(label)) return 1;
+  if (neutral.includes(label))  return 2;
+  if (positive.includes(label)) return 3;
 
-  if (canvasEl._chart) canvasEl._chart.destroy();
+  // default กลาง ๆ
+  return 2;
+}
 
-  canvasEl._chart = new Chart(canvasEl, {
-    type: 'bar',
-    data,
+/**
+ * วาดกราฟ Line Chart ด้วย Chart.js
+ */
+function renderMoodTrendChart(canvasEl, checkins) {
+  const labels = checkins.map(c => c.date);
+  const scores = checkins.map(c => mapMoodToScore(c.mood));
+
+  const ctx = canvasEl.getContext('2d');
+
+  // eslint-disable-next-line no-undef
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Emotion Level',
+        data: scores,
+        fill: false,
+        borderColor: '#7aa2ff',
+        backgroundColor: '#7aa2ff',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.3
+      }]
+    },
     options: {
       responsive: true,
-      maintainAspectRatio: false,   // ✅ STOP chart from stretching insanely
+      maintainAspectRatio: false,
       scales: {
-        y: { beginAtZero: true, ticks: { stepSize: 1, color: "#444" } },
-        x: { grid: { display: false }, ticks: { color: "#444" } }
+        y: {
+          min: 1,
+          max: 3,
+          ticks: {
+            stepSize: 1,
+            callback: (value) => {
+              if (value === 1) return 'Negative';
+              if (value === 2) return 'Neutral';
+              if (value === 3) return 'Positive';
+              return value;
+            }
+          },
+          title: {
+            display: true,
+            text: 'Emotion Level'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Date'
+          }
+        }
       },
-      plugins: { legend: { display: false } }
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const idx = context.dataIndex;
+              const item = checkins[idx];
+              return `${item.mood}${item.note ? ' — ' + item.note : ''}`;
+            }
+          }
+        }
+      }
     }
   });
 }
 
-/* ---------------------- Calendar ---------------------- */
-function buildCalendar(containerEl, year, month, history) {
-  containerEl.innerHTML = '';
+/**
+ * แสดงตาราง history ของ check-in
+ */
+function renderHistoryTable(container, checkins) {
+  // เรียงใหม่ให้ "ล่าสุดอยู่บนสุด" ในตาราง
+  const sorted = [...checkins].sort((a, b) => b.date.localeCompare(a.date));
 
-  const first = new Date(year, month-1, 1);
-  const weekdayOfFirst = first.getDay();
-  const daysInMonth = new Date(year, month, 0).getDate();
-
-  const weekNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const headerRow = document.createElement('div');
-  headerRow.style.display = 'grid';
-  headerRow.style.gridTemplateColumns = 'repeat(7,1fr)';
-  headerRow.style.gap = '6px';
-  headerRow.style.marginBottom = '8px';
-
-  weekNames.forEach(w => {
-    const hh = document.createElement('div');
-    hh.style.textAlign = 'center';
-    hh.style.fontSize = '12px';
-    hh.style.opacity = '.7';
-    hh.textContent = w;
-    headerRow.appendChild(hh);
-  });
-  containerEl.appendChild(headerRow);
-
-  const grid = document.createElement('div');
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(7,1fr)';
-  grid.style.gap = '10px';
-
-  for (let i = 0; i < weekdayOfFirst; i++){
-    const blank = document.createElement('div');
-    blank.className = 'calendar-day';
-    blank.style.background = 'transparent';
-    grid.appendChild(blank);
-  }
-
-  for (let d = 1; d <= daysInMonth; d++){
-    const cell = document.createElement('div');
-    cell.className = 'calendar-day';
-    cell.textContent = d;
-
-    const yyyy_mm_dd = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const matched = history.find(h => h.date === yyyy_mm_dd);
-
-    if (matched) {
-      cell.classList.add('hasMood');
-      cell.textContent = matched.emoji;
-      cell.title = `${matched.name || 'User'} — ${matched.mood}`;
-      cell.dataset.date = yyyy_mm_dd;
-      cell.dataset.mood = matched.mood;
-    }
-    grid.appendChild(cell);
-  }
-
-  containerEl.appendChild(grid);
-}
-
-/* ---------------------- Attendance Table ---------------------- */
-function renderAttendanceTable(wrapperEl, history) {
-  const table = document.createElement('table');
-  table.innerHTML = `
-    <thead>
-      <tr style="text-align:left;color:#666;">
-        <th style="padding:10px 8px">ID</th>
-        <th style="padding:10px 8px">Name</th>
-        <th style="padding:10px 8px">Role</th>
-        <th style="padding:10px 8px">Date</th>
-        <th style="padding:10px 8px">Mood</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th style="width:110px;">Date</th>
+          <th style="width:70px;">Emoji</th>
+          <th style="width:120px;">Mood</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
   `;
 
-  const tbody = table.querySelector('tbody');
-  history.forEach((h, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="padding:10px 8px;border-top:1px solid #eee">${idx+1}</td>
-      <td style="padding:10px 8px;border-top:1px solid #eee">${h.name}</td>
-      <td style="padding:10px 8px;border-top:1px solid #eee">${h.role}</td>
-      <td style="padding:10px 8px;border-top:1px solid #eee">${h.date}</td>
-      <td style="padding:10px 8px;border-top:1px solid #eee">${h.emoji} ${h.mood}</td>
+  sorted.forEach(item => {
+    html += `
+      <tr>
+        <td>${item.date}</td>
+        <td style="font-size:20px;">${item.emoji || ''}</td>
+        <td>${item.mood}</td>
+        <td>${item.note || '-'}</td>
+      </tr>
     `;
-    tbody.appendChild(tr);
   });
 
-  wrapperEl.innerHTML = '';
-  wrapperEl.appendChild(table);
+  html += `
+      </tbody>
+    </table>
+  `;
+
+  container.innerHTML = html;
 }
-
-/* ---------------------- Init ---------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  const history = loadMockData();
-
-  const chartCanvas = document.getElementById('moodChart');
-  renderBarChart(chartCanvas, history);
-
-  const calContainer = document.getElementById('calendarContainer');
-  let current = new Date();
-  function refreshCalendar() {
-    buildCalendar(calContainer, current.getFullYear(), current.getMonth()+1, history);
-  }
-  refreshCalendar();
-
-  document.getElementById('calPrev').addEventListener('click', () => {
-    current.setMonth(current.getMonth()-1);
-    refreshCalendar();
-  });
-  document.getElementById('calNext').addEventListener('click', () => {
-    current.setMonth(current.getMonth()+1);
-    refreshCalendar();
-  });
-
-  renderAttendanceTable(document.getElementById('attendanceTableWrapper'), history);
-  renderAttendanceTable(document.getElementById('attendanceDetail'), history);
-});
