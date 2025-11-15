@@ -694,3 +694,24 @@ td{ padding:8px; border-top:1px solid #eceef4; }
     max-width:280px;
   }
 }
+/* ========== AUTH BACK BUTTON ========== */
+.auth-back-btn {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  transition: 0.25s;
+}
+
+.auth-back-btn:hover {
+  background: rgba(255,255,255,0.28);
+  transform: translateY(-1px);
+}
