@@ -36,13 +36,20 @@ import java.time.LocalDateTime;
 public class CheckinResponse {
     
     private Long checkinId;
+    private String employeeName;
     private String emoji;           // "😊", "😐", "😢"
     private String mood;            // "Happy", "Calm", "Sad"
     private Integer emotionLevel;   // 1, 2, 3
     private LocalDateTime checkinTime;
     private String note;            // Employee's comment
-    
+    private String comment;
+    private String createdAt;
+
     // AI Analysis (optional - อาจจะ null)
     private Float sentimentScore;   // -1.0 to 1.0
     private String sentimentLabel;  // "POSITIVE", "NEUTRAL", "NEGATIVE"
+    private Float nlpScore;        // ค่า score -1.0 → +1.0
+    private Float nlpMagnitude;    // ความรุนแรง
+    private String nlpEmotion;
+  
 }
