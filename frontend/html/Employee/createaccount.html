@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create Account - Emotion Check-in</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/employee.css">
   <link rel="stylesheet" href="../../css/createaccount.css">
@@ -29,35 +30,71 @@
   <section class="auth-card">
     <h2 class="auth-card-title">Create Account</h2>
 
-    <form class="auth-form">
+    <form id="registerForm" class="auth-form" novalidate>
       <div class="auth-row two-cols">
         <label class="auth-field">
           <span>First Name</span>
-          <input type="text" required />
+          <input type="text" id="regFirstName" required />
         </label>
         <label class="auth-field">
           <span>Last Name</span>
-          <input type="text" required />
+          <input type="text" id="regLastName" required />
         </label>
       </div>
 
+      <!-- Username -->
+      <label class="auth-field">
+        <span>Username</span>
+        <input
+          type="text"
+          id="regUsername"
+          placeholder="your.username"
+          required
+        />
+      </label>
+
       <label class="auth-field">
         <span>E-mail</span>
-        <input type="email" placeholder="you@company.com" required />
+        <input
+          type="email"
+          id="regEmail"
+          placeholder="you@company.com"
+          required
+        />
       </label>
 
-      <label class="auth-field">
-        <span>Password</span>
-        <input type="password" placeholder="••••••••" required />
-      </label>
+      <div class="auth-row two-cols">
+        <label class="auth-field">
+          <span>Password</span>
+          <input
+            type="password"
+            id="regPassword"
+            placeholder="••••••••"
+            required
+          />
+        </label>
+        <label class="auth-field">
+          <span>Confirm Password</span>
+          <input
+            type="password"
+            id="regConfirmPassword"
+            placeholder="••••••••"
+            required
+          />
+        </label>
+      </div>
 
-      <!-- PDPA ROW (สวยขึ้น / เป็นบล็อกเดียว) -->
-  <div class="pdpa-row">
-    <label class="checkbox-label">
-    <input type="checkbox" />
-    I have read and agree to the Personal Data Protection Policy (PDPA).
-    </label>
-</div>
+      <!-- PDPA ROW -->
+      <div class="pdpa-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="pdpaCheck" required />
+          I have read and agree to the Personal Data Protection Policy (PDPA).
+        </label>
+      </div>
+
+      <!-- error / success -->
+      <p id="registerError" class="auth-error-message" style="display:none;"></p>
+      <p id="registerSuccess" class="auth-success-message" style="display:none;"></p>
 
       <button type="submit" class="auth-btn primary">Create Account</button>
 
@@ -69,5 +106,6 @@
   </section>
 </div>
 
+<script src="../../js/employee-login.js"></script>
 </body>
 </html>

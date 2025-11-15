@@ -8,39 +8,54 @@ if (loginForm) {
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const email = document.getElementById('loginEmail').value.trim();
+    const identifier = document.getElementById('loginIdentifier').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
 
     loginError.style.display = 'none';
     loginError.textContent = '';
 
-    if (!email || !password) {
-      loginError.textContent = 'Please enter both email and password.';
+    if (!identifier || !password) {
+      loginError.textContent = 'Please enter both email/username and password.';
       loginError.style.display = 'block';
       return;
     }
 
-    // 🔐 TODO: ตรงนี้ในระบบจริงให้เรียก API ตรวจสอบกับฐานข้อมูล
-    // ตอนนี้ mock ง่าย ๆ ด้วย localStorage เพื่อทดสอบ flow
-    const stored = localStorage.getItem('employee-' + email);
+    let user = null;
 
-    if (!stored) {
-      loginError.textContent = 'Account not found. Please check your email or create a new account.';
+    // 1) ลองมองว่า identifier เป็น email ก่อน
+    const storedByEmail = localStorage.getItem('employee-' + identifier);
+    if (storedByEmail) {
+      user = JSON.parse(storedByEmail);
+    } else {
+      // 2) ถ้าไม่เจอ ลองค้นจาก username
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('employee-')) {
+          const candidate = JSON.parse(localStorage.getItem(key));
+          if (candidate.username === identifier) {
+            user = candidate;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!user) {
+      loginError.textContent = 'Account not found. Please check your email/username or create a new account.';
       loginError.style.display = 'block';
       return;
     }
 
-    const user = JSON.parse(stored);
     if (user.password !== password) {
       loginError.textContent = 'Incorrect password. Please try again.';
       loginError.style.display = 'block';
       return;
     }
 
-    // เก็บข้อมูล user ว่าล็อกอินแล้ว (mock)
+    // mock: เก็บว่า employee คนนี้ล็อกอินแล้ว
     localStorage.setItem('currentEmployee', JSON.stringify(user));
 
-    // ล็อกอินสำเร็จ -> ไปหน้า check-in
+    // ไปหน้า check-in
     window.location.href = 'checkin.html';
   });
 }
@@ -59,15 +74,22 @@ if (registerForm) {
     registerSuccess.style.display = 'none';
     registerSuccess.textContent = '';
 
-    const name = document.getElementById('regName').value.trim();
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const username = document.getElementById('regUsername').value.trim();
     const email = document.getElementById('regEmail').value.trim();
-    const department = document.getElementById('regDepartment').value.trim();
-    const position = document.getElementById('regPosition').value.trim();
     const password = document.getElementById('regPassword').value;
     const confirmPassword = document.getElementById('regConfirmPassword').value;
+    const pdpaChecked = document.getElementById('pdpaCheck').checked;
 
-    if (!name || !email || !department || !position || !password || !confirmPassword) {
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       registerError.textContent = 'Please fill in all required fields.';
+      registerError.style.display = 'block';
+      return;
+    }
+
+    if (!pdpaChecked) {
+      registerError.textContent = 'You must agree to the PDPA policy before creating an account.';
       registerError.style.display = 'block';
       return;
     }
@@ -84,21 +106,33 @@ if (registerForm) {
       return;
     }
 
-    // 🔐 TODO: ในระบบจริงให้ส่งข้อมูลไป backend เพื่อบันทึกในฐานข้อมูล
-    // ตอนนี้ลองเก็บ mock ด้วย localStorage ก่อน
-    const existing = localStorage.getItem('employee-' + email);
-    if (existing) {
+    // เช็ค email ซ้ำ
+    const existingEmail = localStorage.getItem('employee-' + email);
+    if (existingEmail) {
       registerError.textContent = 'This email is already registered.';
       registerError.style.display = 'block';
       return;
     }
 
+    // เช็ค username ซ้ำ
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('employee-')) {
+        const usr = JSON.parse(localStorage.getItem(key));
+        if (usr.username === username) {
+          registerError.textContent = 'This username is already taken.';
+          registerError.style.display = 'block';
+          return;
+        }
+      }
+    }
+
     const newUser = {
-      name,
+      firstName,
+      lastName,
+      username,
       email,
-      department,
-      position,
-      password,   // ในระบบจริงต้องเก็บแบบ hash ใน backend
+      password,   // ในระบบจริงควร hash ใน backend
       role: 'Employee'
     };
 
@@ -107,10 +141,12 @@ if (registerForm) {
     registerSuccess.textContent = 'Account created successfully. You can now log in.';
     registerSuccess.style.display = 'block';
 
-    // เคลียร์ฟอร์มเบา ๆ
+    // เคลียร์ฟอร์ม
     registerForm.reset();
 
-    // จะ redirect ไป login เลยก็ได้ ถ้าต้องการ:
-    // setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+    // redirect ไปหน้า login แบบชิล ๆ
+    setTimeout(() => {
+      window.location.href = 'employee_login.html';
+    }, 1200);
   });
 }

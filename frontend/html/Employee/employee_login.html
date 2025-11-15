@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login - Emotion Check-in</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/employee.css">
   <link rel="stylesheet" href="../../css/log_in.css">
@@ -15,7 +16,7 @@
   <section class="auth-hero">
     <h1 class="auth-title">Welcome back 👋</h1>
     <p class="auth-subtitle">
-      Log in with your company email to continue your daily emotion check-in,
+      Log in with your company email or username to continue your daily emotion check-in,
       see your personal trends, and get support from HR when you need help.
     </p>
     <ul class="auth-bullets">
@@ -29,32 +30,51 @@
   <section class="auth-card">
     <h2 class="auth-card-title">Login</h2>
     <p class="auth-card-subtitle">
-      Sign in using your organization email and password.
+      Sign in using your organization email or username and password.
     </p>
 
-    <form class="auth-form">
+    <form id="loginForm" class="auth-form" novalidate>
+      <!-- Email / Username -->
       <label class="auth-field">
-        <span>Email</span>
-        <input type="email" placeholder="you@company.com" required />
+        <span>Email or Username</span>
+        <input
+          type="text"
+          id="loginIdentifier"
+          name="identifier"
+          placeholder="you@company.com or your.username"
+          required
+        />
       </label>
 
+      <!-- Password -->
       <label class="auth-field">
         <span>Password</span>
-        <input type="password" placeholder="••••••••" required />
+        <input
+          type="password"
+          id="loginPassword"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
       </label>
 
-  <div class="auth-row between">
-      <label class="checkbox-label remember">
-    <input type="checkbox" id="rememberMe">
-    <span>Remember me</span>
-    </label>
+      <!-- แถว Remember me (ลบ forgot password ออกแล้ว) -->
+      <div class="auth-row between">
+        <label class="checkbox-label">
+          <input type="checkbox" id="rememberMe" />
+          <span>Remember me</span>
+        </label>
+      </div>
 
-    <a href="#" class="link-small">Forgot password?</a>
-  </div>
+      <!-- ปุ่ม Log in -->
+      <button type="submit" class="auth-btn primary">
+        Log in
+      </button>
 
+      <!-- แสดง error จาก JS -->
+      <p id="loginError" class="auth-error-message" style="display:none;"></p>
 
-      <button type="submit" class="auth-btn primary">Log in</button>
-
+      <!-- ลิงก์ไปหน้า Create Account -->
       <p class="auth-footer-text">
         Don’t have an account yet?
         <a href="createaccount.html" class="link-underline">Create account</a>
@@ -63,5 +83,6 @@
   </section>
 </div>
 
+<script src="../../js/employee-login.js"></script>
 </body>
 </html>
