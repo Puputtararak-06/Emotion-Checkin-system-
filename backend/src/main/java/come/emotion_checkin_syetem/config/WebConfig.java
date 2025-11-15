@@ -3,7 +3,6 @@ package come.emotion_checkin_syetem.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * 📍 LOCATION: src/main/java/com/emotion/checkin/config/WebConfig.java
@@ -15,11 +14,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * 
  * 🐛 DEBUG CHECKLIST:
  * ✅ @Configuration annotation
- * ✅ @EnableWebMvc (optional)
  * ✅ BCryptPasswordEncoder bean
  */
 @Configuration
-@EnableWebMvc
 public class WebConfig {
     
     /**

@@ -90,7 +90,7 @@ public class EmotionCheckin {
      * วันที่ check-in (สำหรับ unique constraint)
      * - ใช้เช็คว่าวันนี้ check-in แล้วหรือยัง
      */
-    @Column(nullable = false)
+    @Column(name = "checkin_date", nullable = false)
     private LocalDate checkinDate;
 
     // ========== Relationship ==========

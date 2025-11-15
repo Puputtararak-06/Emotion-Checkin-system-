@@ -361,7 +361,7 @@ public class UserManagementService {
             .orElseThrow(() -> new RuntimeException("Requester not found"));
         
         if (!requester.canAssignDepartment()) {
-            throw new RuntimeException("Access denied: HR/Admin role required");
+            throw new RuntimeException("Access denied: SuperAdmin role required");
         }
         
         // Step 2: Validate employee

@@ -4,8 +4,10 @@ import come.emotion_checkin_syetem.dto.response.AuditLogDTO;
 import come.emotion_checkin_syetem.entity.AuditLog;
 import come.emotion_checkin_syetem.entity.User;
 import come.emotion_checkin_syetem.repository.AuditLogRepository;
+import come.emotion_checkin_syetem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +54,10 @@ import java.util.stream.Collectors;
 public class AuditLogService {
     
     private final AuditLogRepository auditLogRepository;
+    private final UserRepository userRepository;
+    
+    @Value("${app.system-user-id}")
+    private Long systemUserId;
     
     // ========== AUTHENTICATION LOGS ==========
     
@@ -96,10 +102,13 @@ public class AuditLogService {
      */
     @Transactional
     public void logLoginFailed(String email, String ipAddress) {
-        // Note: Cannot link to User entity (user not found)
-        // Just log the attempt
-        log.warn("📝 Logged: LOGIN_FAILED for {}", email);
-        // TODO: Store in separate failed_login_attempts table
+        AuditLog log = AuditLog.builder()
+            .user(getSystemUser())
+            .action(AuditLog.Action.LOGIN_FAILED)
+            .details(String.format("{\"email\":\"%s\"}", email))
+            .ipAddress(ipAddress != null ? ipAddress : "unknown")
+            .build();
+        auditLogRepository.save(log);
     }
     
     // ========== CHECK-IN LOGS ==========
@@ -329,6 +338,16 @@ public class AuditLogService {
         return logs.stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * 🔧 GET SYSTEM USER (Helper method)
+     * 
+     * @return System user for audit logging
+     */
+    private User getSystemUser() {
+        return userRepository.findById(systemUserId)
+            .orElseThrow(() -> new RuntimeException("System user not found"));
     }
     
     // ========== HELPER METHODS ==========

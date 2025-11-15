@@ -34,7 +34,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/audit-logs")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class AuditLogController {

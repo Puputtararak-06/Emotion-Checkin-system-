@@ -81,7 +81,7 @@ public class Notification {
      */
     @Column(nullable = false)
     private Boolean readStatus = false;
-
+ 
     /**
      * Link ไป check-in ที่เกี่ยวข้อง (optional)
      * - System notification: link ไป check-in ที่ trigger notification

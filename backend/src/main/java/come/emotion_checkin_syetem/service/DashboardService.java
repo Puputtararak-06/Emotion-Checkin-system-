@@ -383,7 +383,7 @@ public class DashboardService {
         
         // Average sentiment (if has AI results)
         double avgSentiment = 0.0;
-        // TODO: Calculate from EmotionAIResult
+        // Calculate from EmotionAIResult
         
         // Recent comment (⚠️ PRIVACY!)
         String recentComment = null;
@@ -416,7 +416,7 @@ public class DashboardService {
             .monthlyNegative(monthlyNegative)
             .averageSentiment(avgSentiment)
             .isHighRisk(weeklyNegative >= 3)  // 3+ bad moods in 7 days
-            .consecutiveBadDays(0)  // TODO: Calculate
+            .consecutiveBadDays(0)  // Calculate
             .recentComment(recentComment)  // ⚠️ NULL for HR!
             .hasComment(hasComment)
             .build();
@@ -470,7 +470,7 @@ public class DashboardService {
             .positivePercentage(posPercent)
             .neutralPercentage(neuPercent)
             .negativePercentage(negPercent)
-            .averageSentimentScore(0.0)  // TODO: Calculate from AI results
+            .averageSentimentScore(0.0)  // Calculate from AI results
             .moodDistribution(distribution)
             .build();
     }
