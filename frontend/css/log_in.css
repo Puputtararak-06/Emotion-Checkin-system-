@@ -1,196 +1,190 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
+/* ===== LOGIN PAGE LAYOUT ===== */
 
-body {
-  height: 100vh;
-  background: linear-gradient(135deg, #2a1e8d, #6b61ff, #f8a6c1);
+.auth-layout {
+  max-width: 1180px;
+  margin: 80px auto 60px;
   display: flex;
+  gap: 72px;
   align-items: center;
-  justify-content: center;
+  padding: 0 40px;
+  font-family: 'Inter', sans-serif;
 }
 
-/* กล่องรวมซ้าย+ขวา */
-.login-container {
-  display: flex;
-  width: 1100px;
-  height: 600px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #fff1f6;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+.auth-hero {
+  flex: 1.1;
+  color: #ffffff;
 }
 
-/* ---------- LEFT ---------- */
-.left-box {
-  width: 45%;
-  background: linear-gradient(135deg, #1f1773, #6376ff, #c8a6ff);
-  color: white;
-  padding: 50px 40px;
-  position: relative;
+.auth-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
-.left-box h2 {
-  font-size: 30px;
-  line-height: 1.4;
+.auth-subtitle {
+  font-size: 15px;
+  opacity: .9;
+  line-height: 1.7;
+  max-width: 420px;
 }
 
-.left-box h2 span {
-  font-weight: 300;
-  opacity: 0.9;
+.auth-bullets {
+  margin-top: 20px;
+  padding-left: 18px;
+  font-size: 14px;
+  opacity: .9;
+  line-height: 1.7;
 }
 
-.logo {
-  font-size: 22px;
-  margin-bottom: 20px;
+/* ===== FORM CARD ===== */
+.auth-card {
+  flex: 1;
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 36px 40px;   /* ให้ padding ซ้าย-ขวาเท่ากันพอดี */
+  box-shadow: 0 18px 40px rgba(15,23,42,0.35);
+  color: #0b1220;
 }
 
-.illustration {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+.auth-card-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-/* ---------- RIGHT ---------- */
-.right-box {
-  width: 55%;
-  padding: 60px 70px;
-  background: #fff1f6;
+.auth-card-subtitle {
+  font-size: 14px;
+  opacity: .8;
+  margin-bottom: 22px;
+}
+
+.auth-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 16px;
 }
 
-.right-box h3 {
-  font-size: 28px;
-  color: #2b255c;
-  margin-bottom: 25px;
+.auth-field input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  font-size: 14px;
+  box-sizing: border-box;   /* 👈 สำคัญ ป้องกันล้นขอบขวา */
 }
 
-.login-form label {
+.auth-field span {
   font-weight: 500;
-  color: #3a345a;
-  margin-top: 10px;
-  display: block;
+  color: #111827;
 }
 
-.login-form input {
+.auth-field input {
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  padding: 11px 14px;
+  font-size: 14px;
   width: 100%;
-  padding: 12px 14px;
-  border: 1.5px solid #ccc;
-  border-radius: 8px;
-  margin-top: 5px;
-  outline: none;
-  transition: 0.3s;
 }
 
-.login-form input:focus {
-  border-color: #7a5cff;
-  box-shadow: 0 0 5px #bdaaff;
+.auth-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.login-btn {
-  width: 100%;
-  background: linear-gradient(90deg, #6b5cff, #9a86ff);
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  margin-top: 25px;
-  cursor: pointer;
-  transition: 0.3s;
+.auth-row.between {
+  justify-content: space-between;
+  margin-top: 4px;
 }
 
-.login-btn:hover {
-  opacity: 0.9;
-}
-
-.reset {
+/* remember me + checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
-  color: #5f5a8a;
-  margin-top: 15px;
+  color: #4b5563;
+}
+.checkbox-label.remember {
+  white-space: nowrap;   /* 👈 ทำให้ "Remember me" อยู่บรรทัดเดียว */
 }
 
-.reset a {
-  color: #6a5cff;
-  font-weight: 500;
+.checkbox-label input[type="checkbox"] {
+  margin: 0;
 }
 
-/* เส้นคั่น OR */
-.divider {
+/* ปรับแถว Remember / Forgot ให้บาลานซ์ */
+.remember-row {
   display: flex;
   align-items: center;
-  text-align: center;
-  margin: 25px 0;
-  color: #7d739e;
+  justify-content: space-between;
+  margin-top: 8px;
 }
 
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #ccc;
-}
-
-.divider span {
-  margin: 0 10px;
-}
-
-/* ปุ่ม social */
-.social-login {
+.remember-row label {
   display: flex;
-  gap: 15px;
-}
-
-.social-login button {
-  flex: 1;
-  display: flex;
+  gap: 8px;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
+}
+
+.auth-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 26px;
+  border: none;
   cursor: pointer;
-  transition: 0.3s;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
 }
 
-.social-login img {
-  width: 18px;
+.auth-btn.primary {
+  background: linear-gradient(90deg,#7aa2ff,#9ac1ff);
+  color: #ffffff;
+  transition: .22s;
 }
 
-.google:hover {
-  border-color: #f06548;
+.auth-btn.primary:hover {
+  opacity: .88;
+  transform: translateY(-1px);
 }
 
-.facebook:hover {
-  border-color: #4064ac;
+.auth-footer-text {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
 }
 
-/* responsive */
-@media (max-width: 900px) {
-  .login-container {
+.link-small,
+.link-underline {
+  font-size: 13px;
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.link-underline {
+  text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 960px) {
+  .auth-layout {
     flex-direction: column;
-    width: 90%;
-    height: auto;
+    align-items: stretch;
+    padding: 40px 20px 60px;
+    gap: 32px;
   }
-
-  .left-box,
-  .right-box {
-    width: 100%;
-    position: relative;
+  .auth-hero {
+    text-align: center;
   }
-
-  .illustration {
-    position: static;
-    margin-top: 20px;
+  .auth-subtitle,
+  .auth-bullets {
+    max-width: none;
+  }
+  .auth-card {
+    margin: 0 auto;
+    max-width: 100%;
   }
 }
