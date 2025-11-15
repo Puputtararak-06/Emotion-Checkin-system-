@@ -55,31 +55,35 @@ public class GoogleCloudConfig {
      * 
      * Used by GoogleNLPService for sentiment analysis
      * 
-     * @return LanguageServiceClient
-     * @throws IOException if credentials file not found
+     * @return LanguageServiceClient (nullable)
      */
     @Bean
-    public LanguageServiceClient languageServiceClient() throws IOException {
-        // Check if credentials path is configured
-        if (credentialsPath == null || credentialsPath.isEmpty()) {
-            throw new IllegalStateException(
-                "Google Cloud credentials not configured. " +
-                "Set google.application.credentials in application.properties"
+    public LanguageServiceClient languageServiceClient() {
+        try {
+            // Check if credentials path is configured
+            if (credentialsPath == null || credentialsPath.isEmpty()) {
+                System.out.println("⚠️ WARNING: Google Cloud credentials not configured.");
+                System.out.println("   Set google.application.credentials in application.properties");
+                return null;
+            }
+
+            // Load credentials from file
+            GoogleCredentials credentials = GoogleCredentials.fromStream(
+                new FileInputStream(credentialsPath)
             );
+
+            // Create LanguageServiceSettings with credentials
+            LanguageServiceSettings settings = LanguageServiceSettings.newBuilder()
+                .setCredentialsProvider(() -> credentials)
+                .build();
+
+            // Create and return LanguageServiceClient
+            return LanguageServiceClient.create(settings);
+        } catch (IOException e) {
+            System.out.println("⚠️ WARNING: Failed to initialize Google Cloud NLP client: " + e.getMessage());
+            System.out.println("   Sentiment analysis will be disabled.");
+            return null;
         }
-
-        // Load credentials from file
-        GoogleCredentials credentials = GoogleCredentials.fromStream(
-            new FileInputStream(credentialsPath)
-        );
-
-        // Create LanguageServiceSettings with credentials
-        LanguageServiceSettings settings = LanguageServiceSettings.newBuilder()
-            .setCredentialsProvider(() -> credentials)
-            .build();
-
-        // Create and return LanguageServiceClient
-        return LanguageServiceClient.create(settings);
     }
 }
     /**

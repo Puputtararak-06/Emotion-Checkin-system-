@@ -44,7 +44,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -402,20 +401,20 @@ public class UserController {
         @RequestHeader("X-User-Id") Long requesterId,
         @Valid @RequestBody AssignDepartmentRequest request
     ) {
-        log.info("🏢 PUT /api/users/assign-department - Requester: {}, Employee: {}, Dept: {}",
+        log.info("🏢 PUT /api/users/assign-department - Requester: {} Assign to: {} -> {}",
             requesterId, request.getEmployeeId(), request.getDepartment());
-        
+
         try {
             userManagementService.assignDepartment(requesterId, request);
-            
+
             return ResponseEntity.ok(
                 ApiResponse.success("Department assigned successfully")
             );
-            
+
         } catch (RuntimeException e) {
-            log.error("❌ Department assignment failed: {}", e.getMessage());
-            
-            return ResponseEntity.badRequest()
+            log.error("❌ Failed to assign department: {}", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ApiResponse.error(e.getMessage()));
         }
     }

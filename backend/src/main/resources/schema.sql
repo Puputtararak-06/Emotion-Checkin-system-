@@ -1,172 +1,110 @@
--- ===================================
--- EMOTION CHECK-IN SYSTEM
--- Database: MySQL 8.0+
--- Encoding: UTF-8
--- Timezone: Asia/Bangkok
--- ===================================
+CREATE DATABASE IF NOT EXISTS emotion_checkin_db
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+USE emotion_checkin_db;
 
--- ===================================
--- 1. EMOTION CATALOG (Pre-defined emotions)
--- ===================================
+CREATE TABLE users (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+email VARCHAR(150) NOT NULL UNIQUE,
+password VARCHAR(255) NOT NULL,
+role VARCHAR(20) NOT NULL, -- EMPLOYEE | HR | SUPERADMIN
+department VARCHAR(100), -- assigned by SUPERADMIN only
+position VARCHAR(100),
+is_active BOOLEAN DEFAULT TRUE,
 
--- Insert emotion types (15 emotions across 3 levels)
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE
+CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
--- LEVEL 3: POSITIVE (😊)
-INSERT INTO emotion_catalog (id, name, level, color_code, description, icon, created_at, updated_at) VALUES
-(1, 'Happy', 3, '#4CAF50', 'Feeling joyful and content', '😊', NOW(), NOW()),
-(2, 'Excited', 3, '#FF9800', 'Full of energy and enthusiasm', '🤩', NOW(), NOW()),
-(3, 'Grateful', 3, '#8BC34A', 'Thankful and appreciative', '🙏', NOW(), NOW()),
-(4, 'Proud', 3, '#9C27B0', 'Accomplished and satisfied', '😎', NOW(), NOW()),
-(5, 'Peaceful', 3, '#00BCD4', 'Calm and relaxed', '😌', NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
+CREATE TABLE emotion_catalog (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+level INT NOT NULL, -- 1=Negative, 2=Neutral, 3=Positive
+name VARCHAR(50) NOT NULL, -- e.g. Happy, Sad, Calm
+color_code VARCHAR(10) -- optional HEX
+) ENGINE=InnoDB;
+-- Insert system user
+insert into users(name,email,password,role,department,position,is_active)
+value ('System','system@internal','N/A' ,'Superadmin' , null ,'system',True);
+-- Insert 15 emotion types
+INSERT INTO emotion_catalog (level, name, color_code) VALUES
+(3, 'Happy', '#4CAF50'),
+(3, 'Relaxed', '#4CAF50'),
+(3, 'Excited', '#4CAF50'),
+(3, 'Proud', '#4CAF50'),
+(3, 'Motivated', '#4CAF50'),
+(2, 'Calm', '#FFC107'),
+(2, 'Tired', '#FFC107'),
+(2, 'Indifferent', '#FFC107'),
+(2, 'Focused', '#FFC107'),
+(2, 'Uncertain', '#FFC107'),
+(1, 'Sad', '#F44336'),
+(1, 'Angry', '#F44336'),
+(1, 'Stressed', '#F44336'),
+(1, 'Anxious', '#F44336'),
+(1, 'Bored', '#F44336');
 
--- LEVEL 2: NEUTRAL (😐)
-INSERT INTO emotion_catalog (id, name, level, color_code, description, icon, created_at, updated_at) VALUES
-(6, 'Okay', 2, '#9E9E9E', 'Neither good nor bad', '😐', NOW(), NOW()),
-(7, 'Tired', 2, '#607D8B', 'Feeling exhausted', '😴', NOW(), NOW()),
-(8, 'Bored', 2, '#795548', 'Lacking interest or excitement', '😑', NOW(), NOW()),
-(9, 'Confused', 2, '#FF5722', 'Uncertain or unclear', '😕', NOW(), NOW()),
-(10, 'Indifferent', 2, '#757575', 'No strong feelings either way', '😶', NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
+INSERT INTO users (name, email, password, role, department, position, is_active)
+VALUES ('System', 'system@internal', 'system', 'SUPERADMIN', NULL, 'SYSTEM', TRUE);
+CREATE TABLE emotion_checkin (
 
--- LEVEL 1: NEGATIVE (😢)
-INSERT INTO emotion_catalog (id, name, level, color_code, description, icon, created_at, updated_at) VALUES
-(11, 'Sad', 1, '#2196F3', 'Feeling down or unhappy', '😢', NOW(), NOW()),
-(12, 'Stressed', 1, '#F44336', 'Overwhelmed or under pressure', '😰', NOW(), NOW()),
-(13, 'Angry', 1, '#E91E63', 'Frustrated or irritated', '😠', NOW(), NOW()),
-(14, 'Anxious', 1, '#673AB7', 'Worried or nervous', '😟', NOW(), NOW()),
-(15, 'Lonely', 1, '#3F51B5', 'Feeling isolated or alone', '😔', NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
-
--- ===================================
--- 2. DEFAULT SUPER ADMIN USER
--- ===================================
-
--- Password: admin123 (BCrypt hashed)
--- Role: SUPERADMIN
--- Use this to login first time
-
-INSERT INTO user (id, name, email, password, role, department, position, is_active, created_at, updated_at) VALUES
-(1, 'Super Admin', 'admin@emotion.com', '$2a$10$xJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3f', 'SUPERADMIN', 'Administration', 'System Administrator', true, NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
-
--- ⚠️ IMPORTANT: Change this password after first login!
--- Default credentials:
--- Email: admin@emotion.com
--- Password: admin123
-
--- ===================================
--- 3. DEMO HR USER
--- ===================================
-
--- Password: hr123 (BCrypt hashed)
--- Role: HR
--- Department: Human Resources
-
-INSERT INTO user (id, name, email, password, role, department, position, is_active, created_at, updated_at) VALUES
-(2, 'HR Manager', 'hr@emotion.com', '$2a$10$Hr.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3f', 'HR', 'Human Resources', 'HR Manager', true, NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
-
--- Default credentials:
--- Email: hr@emotion.com
--- Password: hr123
-
--- ===================================
--- 4. DEMO EMPLOYEE USERS (Optional)
--- ===================================
-
--- Password: employee123 (BCrypt hashed)
-
-INSERT INTO user (id, name, email, password, role, department, position, is_active, created_at, updated_at) VALUES
-(3, 'John Doe', 'john@emotion.com', '$2a$10$Em.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3f', 'EMPLOYEE', 'IT', 'Developer', true, NOW(), NOW()),
-(4, 'Jane Smith', 'jane@emotion.com', '$2a$10$Em.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3f', 'EMPLOYEE', 'IT', 'Designer', true, NOW(), NOW()),
-(5, 'Mike Johnson', 'mike@emotion.com', '$2a$10$Em.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3fH7wYxX3fH7wOxJ.qzH3H3f', 'EMPLOYEE', 'Business', 'Analyst', true, NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
-
--- Default credentials:
--- Email: john@emotion.com / jane@emotion.com / mike@emotion.com
--- Password: employee123
-
--- ===================================
--- 5. DEMO CHECK-IN DATA (Optional)
--- ===================================
-
--- Sample check-ins for demo purposes
-
-INSERT INTO emotion_checkin (id, emotion_level, comment, checkin_time, checkin_date, employee_id, emotion_type_id, created_at, updated_at) VALUES
-(1, 3, 'Great day! Finished my project ahead of schedule.', '2025-11-06 09:30:00', '2025-11-06', 3, 1, NOW(), NOW()),
-(2, 2, 'Feeling a bit tired but okay.', '2025-11-05 10:15:00', '2025-11-05', 3, 7, NOW(), NOW()),
-(3, 1, 'Stressed about upcoming deadline.', '2025-11-04 14:20:00', '2025-11-04', 3, 12, NOW(), NOW())
-ON DUPLICATE KEY UPDATE updated_at = NOW();
-
--- ===================================
--- 6. INDEXES FOR PERFORMANCE
--- ===================================
-
--- Add indexes for frequently queried columns
-
--- User table indexes
-CREATE INDEX IF NOT EXISTS idx_user_email ON user(email);
-CREATE INDEX IF NOT EXISTS idx_user_role ON user(role);
-CREATE INDEX IF NOT EXISTS idx_user_department ON user(department);
-CREATE INDEX IF NOT EXISTS idx_user_active ON user(is_active);
-
--- Emotion check-in indexes
-CREATE INDEX IF NOT EXISTS idx_checkin_date ON emotion_checkin(checkin_date);
-CREATE INDEX IF NOT EXISTS idx_checkin_employee ON emotion_checkin(employee_id);
-CREATE INDEX IF NOT EXISTS idx_checkin_level ON emotion_checkin(emotion_level);
-CREATE INDEX IF NOT EXISTS idx_checkin_time ON emotion_checkin(checkin_time);
-
--- Notification indexes
-CREATE INDEX IF NOT EXISTS idx_notification_receiver ON notification(receiver_id);
-CREATE INDEX IF NOT EXISTS idx_notification_read ON notification(read_status);
-CREATE INDEX IF NOT EXISTS idx_notification_created ON notification(created_at);
-
--- Audit log indexes
-CREATE INDEX IF NOT EXISTS idx_audit_user ON audit_log(user_id);
-CREATE INDEX IF NOT EXISTS idx_audit_action ON audit_log(action);
-CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
-
--- ===================================
--- VERIFICATION QUERIES
--- ===================================
-
--- Run these to verify setup:
-
--- Check emotion catalog (should have 15 emotions)
--- SELECT * FROM emotion_catalog ORDER BY level DESC, id;
-
--- Check users (should have 5 users)
--- SELECT id, name, email, role, department FROM user;
-
--- Check indexes
--- SHOW INDEXES FROM user;
--- SHOW INDEXES FROM emotion_checkin;
-
--- ===================================
--- NOTES
--- ===================================
-
-/*
-⚠️ SECURITY NOTES:
-1. Change default passwords immediately after setup!
-2. BCrypt hashes shown are examples - generate real ones:
-   https://bcrypt-generator.com/
    
-3. Never commit real passwords to Git!
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+employee_id BIGINT NOT NULL,
+emotion_level INT NOT NULL,
+emotion_type_id BIGINT NOT NULL,
+comment TEXT,
 
-📝 USAGE:
-1. Run this script AFTER Spring Boot creates tables
-2. Or set spring.jpa.hibernate.ddl-auto=create-drop
-3. Or run manually in MySQL Workbench
+checkin_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+checkin_date DATE NOT NULL,
+CONSTRAINT fk_checkin_employee FOREIGN KEY (employee_id)
+REFERENCES users(id) ON DELETE CASCADE,
+CONSTRAINT fk_checkin_emotype FOREIGN KEY (emotion_type_id)
+REFERENCES emotion_catalog(id),
+CONSTRAINT uk_employee_daily UNIQUE (employee_id, checkin_date)
+) ENGINE=InnoDB;
 
-🔄 RE-RUN:
-- Safe to re-run (uses ON DUPLICATE KEY UPDATE)
-- Will update existing records
-- Won't create duplicates
+CREATE TABLE emotion_ai_result (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+checkin_id BIGINT NOT NULL,
+sentiment_score FLOAT,
+magnitude FLOAT,
+sentiment_label VARCHAR(20), -- POSITIVE | NEUTRAL | NEGATIVE
+language VARCHAR(10),
+analyzed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT fk_ai_checkin FOREIGN KEY (checkin_id)
+REFERENCES emotion_checkin(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
-🎯 DEFAULT CREDENTIALS:
-Admin:    admin@emotion.com    / admin123
-HR:       hr@emotion.com       / hr123
-Employee: john@emotion.com     / employee123
-*/
+CREATE TABLE notifications (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+sender_id BIGINT,
+receiver_id BIGINT NOT NULL,
+message TEXT NOT NULL,
+read_status BOOLEAN DEFAULT FALSE,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+related_checkin_id BIGINT,
+priority VARCHAR(20) DEFAULT 'NORMAL', -- HIGH | NORMAL | LOW
+
+type VARCHAR(20) DEFAULT 'MESSAGE', -- SYSTEM | ALERT | MESSAGE
+CONSTRAINT fk_noti_sender FOREIGN KEY (sender_id) REFERENCES users(id),
+CONSTRAINT fk_noti_receiver FOREIGN KEY (receiver_id) REFERENCES users(id),
+CONSTRAINT fk_noti_checkin FOREIGN KEY (related_checkin_id)
+REFERENCES emotion_checkin(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE audit_log (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+user_id BIGINT ,
+action VARCHAR(50) NOT NULL,
+target_user_id BIGINT,
+details TEXT,
+ip_address VARCHAR(50),
+is_critical BOOLEAN DEFAULT FALSE,
+is_auth_action BOOLEAN DEFAULT FALSE,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT fk_audit_user FOREIGN KEY (user_id) REFERENCES users(id),
+CONSTRAINT fk_audit_target FOREIGN KEY (target_user_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+()

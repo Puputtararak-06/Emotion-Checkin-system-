@@ -26,13 +26,11 @@ import org.springframework.web.bind.annotation.*;
  * 🐛 DEBUG CHECKLIST:
  * ✅ @RestController annotation
  * ✅ @RequestMapping("/api/auth")
- * ✅ @CrossOrigin (allow frontend)
  * ✅ @Valid for request validation
  * ✅ Try-catch error handling
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")  // Allow all origins (change in production!)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {

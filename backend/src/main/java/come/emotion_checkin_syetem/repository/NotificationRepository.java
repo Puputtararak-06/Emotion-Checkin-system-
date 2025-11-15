@@ -139,7 +139,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
            "WHERE n.receiver = :receiver " +
            "ORDER BY n.createdAt DESC")
     List<Notification> findRecentNotifications(
-        @Param("receiver") User receiver,
-        @Param("limit") int limit
-    );
-}
+        @Param("receiver") User receiver);
+    }

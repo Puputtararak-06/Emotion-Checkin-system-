@@ -23,7 +23,7 @@ import java.util.List;
  * - role: EMPLOYEE | HR | SUPERADMIN
  */
 @Entity
-@Table(name = "user", indexes = {
+@Table(name = "users", indexes = {
     @Index(name = "idx_email", columnList = "email"),
     @Index(name = "idx_role", columnList = "role"),
     @Index(name = "idx_department", columnList = "department"),
@@ -141,7 +141,8 @@ public class User {
      * เช็คว่าสามารถ assign department ได้หรือไม่
      */
     public boolean canAssignDepartment() {
-        return role == Role.HR || role == Role.SUPERADMIN;
+        // Only SuperAdmin can assign departments per new policy
+        return role == Role.SUPERADMIN;
     }
 
     /**

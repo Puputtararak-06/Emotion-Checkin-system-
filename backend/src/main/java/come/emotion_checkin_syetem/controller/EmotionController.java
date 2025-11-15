@@ -29,13 +29,11 @@ import java.util.Optional;
  * 
  * 🐛 DEBUG CHECKLIST:
  * ✅ @RestController + @RequestMapping
- * ✅ @CrossOrigin
  * ✅ Employee ID from request header (or session)
  * ✅ Validation
  */
 @RestController
 @RequestMapping("/api/checkin")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class EmotionController {
