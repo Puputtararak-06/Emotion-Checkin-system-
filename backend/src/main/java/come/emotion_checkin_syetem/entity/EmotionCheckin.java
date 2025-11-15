@@ -142,4 +142,13 @@ public class EmotionCheckin {
                 ", checkinTime=" + checkinTime +
                 '}';
     }
+
+    public Object getCreatedAt() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCreatedAt'");
+    }
+    //NLP fields
+    private float nlpScore;
+    private float nlpMagnitude;
+    private String nlpEmotion;
 }

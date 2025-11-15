@@ -181,4 +181,9 @@ public class GoogleNlpService {
             return 0.0f;  // Neutral fallback
         }
     }
+
+    public Sentiment analyze(String comment) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'analyze'");
+    }
 }

@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.cloud.language.v1.Sentiment;
+import com.google.cloud.language.v1.Document;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,6 +40,7 @@ import java.util.Optional;
  * ✅ Validate 1 check-in per day
  * ✅ Google NLP integration
  */
+@Autowired
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -49,6 +53,7 @@ public class EmotionService {
     private final GoogleNlpService googleNlpService;
     private final NotificationService notificationService;
     private final AuditLogService auditLogService;
+    
     
     /**
      * 😊 CHECK-IN
@@ -96,6 +101,11 @@ public class EmotionService {
         if (!emotionType.getLevel().equals(request.getEmotionLevel())) {
             throw new RuntimeException("Emotion level does not match emotion type");
         }
+        Sentiment sentiment = googleNlpService.analyze(request.getComment());
+        float score = sentiment.getScore();
+        float magnitude = sentiment.getMagnitude();
+        String emotion = mapEmotion(score);
+        
         
         // Step 4: Create check-in record (Thailand timezone)
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Bangkok"));
@@ -142,16 +152,37 @@ public class EmotionService {
         auditLogService.logCheckin(employee);
         
         // Step 8: Return response
-        return CheckinResponse.builder()
-            .checkinId(savedCheckin.getId())
-            .emoji(getEmojiForLevel(request.getEmotionLevel()))
-            .mood(emotionType.getName())
-            .emotionLevel(request.getEmotionLevel())
-            .checkinTime(now)
-            .note(request.getComment())
-            .sentimentScore(sentimentScore)
-            .sentimentLabel(sentimentLabel)
-            .build();
+      // สร้าง record check-in
+
+       EmotionCheckin newCheckin = EmotionCheckin.builder()
+                    .employee(employee)
+                    .emotionLevel(request.getEmotionLevel())
+                    .emotionType(emotionType)
+                    .comment(request.getComment())
+                    .checkinTime(now)
+                    .checkinDate(today)
+                    // NLP
+                    .nlpScore(score)
+                    .nlpMagnitude(magnitude)
+                    .nlpEmotion(emotion)
+
+                    .build();
+
+        EmotionCheckin SavedCheckin = checkinRepository.save(newCheckin);
+
+        // ส่งผลกลับหน้าเว็บ
+            return CheckinResponse.builder()
+                    .employeeName(employee.getName())
+                    .emotionLevel(savedCheckin.getEmotionLevel())
+                    .comment(savedCheckin.getComment())
+                    .emoji(getEmojiForLevel(savedCheckin.getEmotionLevel()))
+                    .createdAt(savedCheckin.getCreatedAt().toString())
+                    // NLP result
+                    .nlpScore(savedCheckin.getNlpScore())
+                    .nlpMagnitude(savedCheckin.getNlpMagnitude())
+                    .nlpEmotion(savedCheckin.getNlpEmotion())
+                    
+                    .build();
     }
     
     /**
@@ -205,5 +236,19 @@ public class EmotionService {
             case 3 -> "😊";  // Positive
             default -> "❓";
         };
+    }
+
+/**
+ * 🔥 NLP SCORE → EMOTION CATEGORY
+ * 
+ * @param score sentiment score (-1.0 to +1.0)
+ * @return Emotion category string
+ */
+private String mapEmotion(float score) {
+    if (score >= 0.6) return "Very Positive";
+    if (score >= 0.2) return "Positive";
+    if (score > -0.2) return "Neutral";
+    if (score > -0.6) return "Negative";
+    return "Very Negative";
     }
 }
